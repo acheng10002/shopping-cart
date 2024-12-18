@@ -1,42 +1,177 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
   text-align: center;
+  padding: 2rem;
+  margin: 0 auto;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.page-container {
+  min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.header {
+  display: flex;
+  gap: 15vw;
+  justify-content: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+ul {
+  list-style: none;
+  display: flex;
+  gap: 14vw;
+}
+
+.storefront {
+  max-width: 24vw;
+  padding: 3vh 0 5vh 0;
+}
+
+.cards-container {
+  text-align: center;
+  margin: 0 8vw 0 8vw;
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .card {
-  padding: 2em;
+  width: 350px;
+  height: 545px;
+  background-color: white;
+  overflow: visible;
+  border: 1px solid lightgray;
+  border-radius: 15px;
+  transition: box-shadow 0.3s ease;
 }
 
-.read-the-docs {
-  color: #888;
+.card:hover {
+  box-shadow: 0px 0px 8px 6px rgba(112, 128, 144, 0.3);
+}
+
+.card-contents {
+  height: 545px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-container {
+  width: 190px;
+  height: 260px;
+  background-color: white;
+  padding: 0 35px 0 35px;
+  margin: 5px auto 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.product-image {
+  width: 150px;
+  height: auto;
+  background-color: white;
+  border-radius: 15px;
+}
+
+.price {
+  margin-top: 10px;
+}
+
+h3,
+h4 {
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 3px;
+}
+
+.product-details {
+  padding: 0 6px 6px 6px;
+}
+
+p {
+  font-size: 10px;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+}
+
+.rating {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.description,
+.category {
+  font-size: 8px;
+}
+
+.category {
+  margin-bottom: 3px;
+}
+
+.count-button {
+  text-align: center;
+  width: 10px;
+  background-color: white;
+  border: 0.5px solid black;
+  border-radius: 0px;
+  padding: 2px 17px 5.75px 8px;
+  margin: 0;
+}
+
+input {
+  text-align: center;
+  width: 52px;
+  height: 25px;
+  border: 1px solid darkgray;
+}
+
+.error-message {
+  font-size: 10px;
+  color: red;
+  padding: 0;
+  margin: 0;
+  margin-top: 10px;
+}
+
+input:hover {
+  border-color: #646cff;
+}
+
+input:focus,
+input:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Ensure spinners are always visible */
+input[type="number"].always-visible-spinner {
+  -moz-appearance: textfield; /* Ensures consistent appearance across browsers */
+}
+
+input[type="number"].always-visible-spinner::-webkit-inner-spin-button,
+input[type="number"].always-visible-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: auto; /* Ensures spinners are styled natively */
+  opacity: 1; /* Makes them fully visible */
+}
+
+input[type="number"].always-visible-spinner::-moz-inner-spin-button {
+  opacity: 1; /* Makes spinners visible in Firefox */
+}
+
+.button-container {
+  margin: auto 0 15px 0;
+}
+
+.add-button {
+  font-size: 13px;
+  width: 120px;
+  margin-top: 10px;
 }
