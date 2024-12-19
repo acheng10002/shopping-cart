@@ -1,13 +1,29 @@
-// import { useState } from "react";
-import { Link } from "react-router-dom";
+// App.jsx is app's main entry point for both UI structure and routing
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Homepage from "./components/Homepage";
+import ShopPage from "./components/ShopPage";
+import LoginPage from "./components/LoginPage";
 import "./App.css";
 
 const App = () => {
+  /*
+  // track login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // store cart data for logged-in user
+  const [carts, setCards] = useState([]);
+  */
   return (
-    <div>
-      <Homepage />
-    </div>
+    /* React router is a package that lets me manage routing with the History 
+    API, which enables a website to interact with the browser's session history 
+    (i.e. list of pages that the user has visited in a given window ) */
+    <BrowserRouter>
+      <Routes>
+        {/* App is a parent to Homepage and ShopPage components */}
+        <Route path="/" element={<Homepage />} />
+        <Route path="shop" element={<ShopPage />} />
+        <Route path="login" element={<LoginPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
@@ -40,6 +56,4 @@ B. shop page
 *test using React Testing Library
   - careful not to test react-router-dom
 *routing should be handled as a single page app
-
-
 */

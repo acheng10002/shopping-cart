@@ -1,6 +1,9 @@
+/* CardsContainer.jsx is the app's component for all the product cards
+it's a child of PageContainer component 
+it's a parent to the ProductCard component */
+import { useContext, useState, useEffect } from "react";
+import { PageContext } from "./PageContext";
 import ProductCard from "./ProductCard.jsx";
-import NavBar from "./NavBar.jsx";
-import { useState, useEffect } from "react";
 
 const productIdSet = [
   "1",
@@ -26,42 +29,81 @@ const productIdSet = [
 ];
 
 function CardsContainer() {
-  const [itemCounts, setItemCounts] = useState({});
-  const [totalItems, setTotalItems] = useState(0);
-  const [checkoutAmount, setCheckoutAmount] = useState(0.0);
+  /* access totalItems, setItemsCounts, and handleAddClick provided by the 
+  PageCOntext.Provider 
+  - manages the state in the CardsContainer component */
+  const { itemCounts, setItemCounts, handleAddClick } = useContext(PageContext);
+  const [productData, setProductData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleAddClick = (productId, productPrice) => {
-    const itemCount = Number(itemCounts[productId] || 0);
+  useEffect(() => {
+    // fetches data for all product ids in productIdSet
+    async function fetchAllProducts() {
+      try {
+        // Promise.all fetches all products in parallel
+        const responses = await Promise.all(
+          // maps over productIdSet to send API requests for each product id
+          productIdSet.map((id) =>
+            fetch(`https://fakestoreapi.com/products/${id}`).then((res) =>
+              res.json()
+            )
+          )
+        );
+        // on success, updates productData with the fetched product info
+        setProductData(responses);
+        setLoading(false);
+      } catch (error) {
+        // on failure, logs the error to the console, sets error to a message
+        console.error("Error fetching products:", error);
+        setError("Failed to load products.");
+        setLoading(false);
+      }
+    }
 
-    setTotalItems((prevCount) => prevCount + itemCount);
-    setCheckoutAmount(
-      (prevAmount) => prevAmount + itemCount * Number(productPrice)
-    );
+    fetchAllProducts();
 
-    setItemCounts((prevCounts) => ({
-      ...prevCounts,
-      [productId]: 0,
-    }));
-  };
+    fetch("https://fakestoreapi.com/users")
+      .then((res) => res.json())
+      .then((json) => console.log(json));
+    // useEffect runs only once when the component mounts
+  }, []);
+
+  // if loading is true, render message indicating data is being fetched
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
+
+  // if error is not null, render the error message
+  if (error) {
+    return <h1>{error}</h1>;
+  }
 
   return (
     <>
-      <NavBar totalItems={totalItems} checkoutAmount={checkoutAmount} />
       <h1>Shop!</h1>
       <div className="cards-container">
-        {productIdSet.map((productId) => (
+        {/* iterates over the fetched product data to render a ProductCard
+        for each product */}
+        {productData.map((product) => (
           <ProductCard
-            key={productId}
-            productId={productId}
-            singleItemCount={itemCounts[productId] || 0}
+            key={product.id} // unique key to id each component in the list
+            productId={product.id} // id of the product
+            productData={product} // full product data object
+            /* current count of the product in the card 
+            defaults to 0 if not in itemsCount */
+            singleItemCount={itemCounts[product.id] || 0}
+            // updates the count for the product in itemCounts
             onChange={(newCount) =>
+              // creates a new state obejct with the updated count
               setItemCounts((prevCounts) => ({
                 ...prevCounts,
-                [productId]: Number(newCount),
+                [product.id]: Number(newCount),
               }))
             }
+            // passes product id and price to handleAddClick in PageContext
             handleAddClick={(productPrice) =>
-              handleAddClick(productId, productPrice)
+              handleAddClick(product.id, productPrice)
             }
           />
         ))}

@@ -9,24 +9,58 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .header {
   display: flex;
-  gap: 15vw;
+  gap: 7vw;
   justify-content: center;
+  align-items: center;
+  margin-bottom: 3vh;
+}
+
+.nav-login-buttons {
+  height: 50px;
+  width: 180px;
+  padding: 0px;
+  margin: 0px;
 }
 
 ul {
   list-style: none;
   display: flex;
-  gap: 14vw;
+  gap: 8vw;
 }
 
 .storefront {
+  text-align: center;
   max-width: 24vw;
-  padding: 3vh 0 5vh 0;
+  padding: 3vh 0 2vh 0;
+}
+
+.footer-links {
+  display: block;
+  margin-top: 3vh;
+}
+
+.login-container {
+  display: flex;
+  gap: 3vh;
+  flex-direction: column;
+  margin: 25vh 0 5vh 0;
+}
+
+label {
+  font-size: 18px;
+  font-weight: 500;
+  min-width: 94px;
+}
+
+.login-inputs {
+  height: 30px;
+  width: 280px;
+  margin-left: 10px;
 }
 
 .cards-container {
@@ -152,17 +186,17 @@ input:focus-visible {
 }
 
 /* Ensure spinners are always visible */
-input[type="number"].always-visible-spinner {
+input[type="number"].item-count-input {
   -moz-appearance: textfield; /* Ensures consistent appearance across browsers */
 }
 
-input[type="number"].always-visible-spinner::-webkit-inner-spin-button,
-input[type="number"].always-visible-spinner::-webkit-outer-spin-button {
+input[type="number"].item-count-input::-webkit-inner-spin-button,
+input[type="number"].item-count-input::-webkit-outer-spin-button {
   -webkit-appearance: auto; /* Ensures spinners are styled natively */
   opacity: 1; /* Makes them fully visible */
 }
 
-input[type="number"].always-visible-spinner::-moz-inner-spin-button {
+input[type="number"].item-count-input::-moz-inner-spin-button {
   opacity: 1; /* Makes spinners visible in Firefox */
 }
 
