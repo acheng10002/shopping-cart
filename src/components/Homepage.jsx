@@ -3,6 +3,8 @@
 - it's the parent to a PageContainer component */
 import PageContainer from "./PageContainer";
 import shop from "../assets/shop.png";
+/* Link is React Router's custom element used instead of the a tag to prevent 
+browser reloading everytime I click the link on the navbar */
 import { Link } from "react-router-dom";
 
 const Homepage = () => {
@@ -12,8 +14,6 @@ const Homepage = () => {
       <picture>
         <img src={shop} alt="image of storefront" className="storefront"></img>
       </picture>
-      {/* React Router's custom element used instead of the a tag to prevent 
-      browser reloading everytime I click the link on the navbar */}
       <div>
         <Link to="login" className="footer-links">
           I Have An Account

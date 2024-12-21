@@ -1,29 +1,58 @@
 // App.jsx is app's main entry point for both UI structure and routing
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+/* useNavigate programmatically navigates to the ShopPage 
+Routes component is a container that defines all the possible routes in my app 
+Route component defines individual route within the Routes component */
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { PageContext } from "./components/PageContext";
 import Homepage from "./components/Homepage";
 import ShopPage from "./components/ShopPage";
 import LoginPage from "./components/LoginPage";
 import "./App.css";
 
 const App = () => {
-  /*
-  // track login state
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // store cart data for logged-in user
-  const [carts, setCards] = useState([]);
-  */
+  // accesses isLoggedIn, cart, and handleLogin provided by PageContext.Provider
+  const { isLoggedIn, setIsLoggedIn, cart, handleLogin } =
+    useContext(PageContext);
+  const navigate = useNavigate();
+
+  /* onClick handler -> triggers handleLoginClick -> onLogin handler -> 
+  triggers handleLoginSubmit -> handleLogin from PageContext.Provider */
+  // handleLoginSubmit calls handleLogin which checks user's credentials during login
+  const handleLoginSubmit = async (username, password) => {
+    /* fetches user, cart, totalItems, and checkoutAmount when user logs in
+    with valid username and password */
+    const success = await handleLogin(username, password);
+    // if valid, direct user to their cart on ShopPage
+    if (success) {
+      navigate("/shop");
+      setIsLoggedIn(true);
+    }
+  };
+
   return (
     /* React router is a package that lets me manage routing with the History 
     API, which enables a website to interact with the browser's session history 
     (i.e. list of pages that the user has visited in a given window ) */
-    <BrowserRouter>
-      <Routes>
-        {/* App is a parent to Homepage and ShopPage components */}
-        <Route path="/" element={<Homepage />} />
-        <Route path="shop" element={<ShopPage />} />
-        <Route path="login" element={<LoginPage />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      {/* App is a parent to Homepage and ShopPage components */}
+      <Route path="/" element={<Homepage />} />
+      <Route
+        path="shop"
+        // ShopPage gets rendered with cart and isLoggedIn states passed in
+        element={<ShopPage cart={cart} isLoggedIn={isLoggedIn} />}
+      />
+      <Route
+        path="login"
+        element={
+          <LoginPage
+            onLogin={(username, password) =>
+              handleLoginSubmit(username, password)
+            }
+          />
+        }
+      />
+    </Routes>
   );
 };
 

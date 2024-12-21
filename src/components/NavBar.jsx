@@ -8,12 +8,16 @@ import { Link, useNavigate } from "react-router-dom";
 import "../index.css";
 
 function NavBar() {
-  // access totalItems and checkoutAmount provided by the PageContext.Provider
-  const { totalItems, checkoutAmount } = useContext(PageContext);
+  // access totalItems, checkoutAmount, isLoggedIn, and setIsLoggedIn provided by the PageContext.Provider
+  const { totalItems, checkoutAmount, isLoggedIn, setIsLoggedIn } =
+    useContext(PageContext);
   const navigate = useNavigate();
 
   // redirects to /login route
   const handleLoginRedirectClick = () => {
+    if (isLoggedIn) {
+      setIsLoggedIn(false);
+    }
     navigate("/login");
   };
 
@@ -35,7 +39,7 @@ function NavBar() {
       </nav>
       {/* login button's onClick handler triggers the navigation */}
       <button className="nav-login-buttons" onClick={handleLoginRedirectClick}>
-        🖊️ User Login
+        {isLoggedIn ? "🚪 Logout" : "🖊️ User Login"}
       </button>
       {/* displays checkoutAmount formated to two decimal places */}
       <button className="nav-login-buttons">

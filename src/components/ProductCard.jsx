@@ -21,9 +21,16 @@ const ProductCard = memo(
 
       // allow the field to be empty
       if (value === "") {
+        /* onChange calls,
+        setItemCounts((prevCounts) => ({
+          ...prevCounts,
+          [product.id]: Number(newCount),
+        })) 
+        value is newCount */
         onChange(value);
-        // ensure the input is a valid number
+        // ensures the input is a valid number
       } else if (/^\d+$/.test(value)) {
+        // sets value as newCount which is the specific product's updated itemCount
         onChange(Number(value));
       }
 
@@ -31,6 +38,10 @@ const ProductCard = memo(
       setError(null);
     };
 
+    /* Add to Cart onClick handler -> triggers handleAddInCard -> triggers 
+    handleAddClick provided by PageContext.Provider -> and handleAddClick
+    updates itemCounts, totalItems, and checkoutAmount when an item is added,
+    whether it's a user that already exists or doesn't */
     const handleAddInCard = () => {
       // validates whether the selected quantity exceeds the available stock
       if (singleItemCount > productData.rating.count) {
@@ -46,12 +57,12 @@ const ProductCard = memo(
       <div className="card">
         <div className="card-contents">
           <div className="image-container">
-            {/* display the product image
-            defers loading the image until it is visible in the viewport */}
+            {/* display the product image */}
             <img
               src={productData.image}
               alt={`${productId}`}
               className="product-image"
+              // defers loading the image until it is visible in the viewport
               loading="lazy"
             />
           </div>
