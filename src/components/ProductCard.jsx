@@ -1,55 +1,57 @@
-/* ProductCard.jsx is the app's component for each product card
-it's a child of CardsContainer component
+/* ProductCard.jsx is a child of CardsContainer component
 memo is a higher-order component that prevents unnecessary re-renders if
 the props haven't changed */
-import { useState, memo } from "react";
+import { useState, useEffect, memo } from "react";
 
 const ProductCard = memo(
   /* productId - unique id for the product
-  productData - object containing details about the product
-  singleItemCount - number of this specific product currently selected
-  onChange - callback function to update the singleItemCount
-  handleAddClick - callback function to handle adding the item to the cart
-  */
-  ({ productId, productData, singleItemCount, onChange, handleAddClick }) => {
+  productsData - object containing details about all products
+  itemCounts - object with quantity of every product
+  handleAddClick - callback function to handle adding an item to the cart */
+  ({ productId, productData, itemCounts, handleAddClick }) => {
+    // local state for input value
+    const [inputValue, setInputValue] = useState(0);
     // tracks any validation error messages
     const [error, setError] = useState(null);
 
-    // updates the singleItemCount based on user input
+    useEffect(() => {
+      /* if itemCounts[productId] is undefined, useEffect does not set a value 
+      for it, but inputValue is initialized with useState(0), so inputValue 
+      defaults to 0 */
+      if (itemCounts && itemCounts[productId] !== undefined) {
+        setInputValue(itemCounts[productId]);
+      }
+      // re-run side effect if itemCounts or productId changes
+    }, [itemCounts, productId]);
+
+    // updates the input value based on user entry
     const handleInputChange = (event) => {
       const value = event.target.value;
 
       // allow the field to be empty
-      if (value === "") {
-        /* onChange calls,
-        setItemCounts((prevCounts) => ({
-          ...prevCounts,
-          [product.id]: Number(newCount),
-        })) 
-        value is newCount */
-        onChange(value);
+      if (value === "" || value === "0") {
+        setInputValue(0);
         // ensures the input is a valid number
       } else if (/^\d+$/.test(value)) {
-        // sets value as newCount which is the specific product's updated itemCount
-        onChange(Number(value));
+        setInputValue(Number(value));
       }
 
       // clears any existing error messages
       setError(null);
     };
 
-    /* Add to Cart onClick handler -> triggers handleAddInCard -> triggers 
-    handleAddClick provided by PageContext.Provider -> and handleAddClick
-    updates itemCounts, totalItems, and checkoutAmount when an item is added,
-    whether it's a user that already exists or doesn't */
+    /* Add to Cart onClick event (ProductCard) -> triggers handleAddInCard 
+    handler (ProductCard) -> triggers handleAddClick (PageContext) 
+    -> and handleAddClick updates itemCounts and totalItems when an item is 
+    added, whether it's a user that already exists or doesn't */
     const handleAddInCard = () => {
       // validates whether the selected quantity exceeds the available stock
-      if (singleItemCount > productData.rating.count) {
+      if (inputValue > productData.rating.count) {
         setError(`Cannot add more than ${productData.rating.count} items.`);
       } else {
         setError(null);
-        // if it doesn't, update the cart's total price and item count
-        handleAddClick(productData.price);
+        // if it doesn't, update the cart's items count and checkout amount
+        handleAddClick(productId, inputValue, productData.price);
       }
     };
 
@@ -79,9 +81,8 @@ const ProductCard = memo(
             <div className="input-container">
               <input
                 type="number"
-                // binds input value to singleItemCount
-                value={singleItemCount == 0 ? "" : singleItemCount}
-                // calls handleInputChange on changes
+                value={inputValue}
+                // direct function reference to onChange event handler
                 onChange={handleInputChange}
                 // prevents negative values
                 min="0"

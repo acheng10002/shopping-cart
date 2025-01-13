@@ -1,10 +1,8 @@
-/* Homepage.jsx is app's Homepage component/element
-- it's a child of the App component
-- it's the parent to a PageContainer component */
+/* Homepage.jsx is a child of App and parent to a PageContainers */
 import PageContainer from "./PageContainer";
 import shop from "../assets/shop.png";
 /* Link is React Router's custom element used instead of the a tag to prevent 
-browser reloading everytime I click the link on the navbar */
+browser reloading every time I click the link on the navbar */
 import { Link } from "react-router-dom";
 
 const Homepage = () => {

@@ -1,30 +1,52 @@
-/* NavBar.jsx is the app's component for navigation section
-it's a child of PageContainer component 
-useContext is a hook used to consume context values provided by PageContext.Provider */
-import { useContext } from "react";
+// NavBar.jsx is a child of PageContainer
+import { useContext, useState, useEffect } from "react";
 import { PageContext } from "./PageContext";
 // useNavigate programmatically navigates to the LoginPage
 import { Link, useNavigate } from "react-router-dom";
 import "../index.css";
 
 function NavBar() {
-  // access totalItems, checkoutAmount, isLoggedIn, and setIsLoggedIn provided by the PageContext.Provider
-  const { totalItems, checkoutAmount, isLoggedIn, setIsLoggedIn } =
+  /* accesses itemCounts, totalItems, isLoggedIn, handleLogout, and priceCache
+  provided by the PageContext.Provider */
+  const { itemCounts, totalItems, isLoggedIn, handleLogout, priceCache } =
     useContext(PageContext);
   const navigate = useNavigate();
+  // local state tracking checkoutAmount including tax
+  const [checkoutAmount, setCheckoutAmount] = useState(0.0);
 
-  // redirects to /login route
+  // updates checkoutAmount in DOM
+  useEffect(() => {
+    const calculateCheckoutAmount = () => {
+      // returns an array of itemCounts' string-keyed property pairs
+      const entries = Object.entries(itemCounts);
+      // iterates over the entries array, accumulates a result, total, starts as 0
+      const totalAmount = entries.reduce((total, [productId, quantity]) => {
+        // for each product, gets its price from the priceCache
+        const price = priceCache.current[productId] || 0;
+        // accumulates the cost of each product's quantity
+        return total + quantity * price;
+      }, 0);
+      setCheckoutAmount(totalAmount);
+    };
+    calculateCheckoutAmount();
+    // re-runs side effect when itemCounts changes
+  }, [itemCounts]);
+
+  // logs user out and redirects to /login route
   const handleLoginRedirectClick = () => {
-    if (isLoggedIn) {
-      setIsLoggedIn(false);
-    }
+    handleLogout();
     navigate("/login");
+  };
+
+  // redirects to checkout route
+  const handleCheckoutClick = () => {
+    navigate("/checkout");
   };
 
   return (
     <div className="header">
       <nav>
-        <ul>
+        <ul className="nav-ul">
           <li>
             {/* again, Link used instead of the a tag to prevent browser 
              reloading every time I click the link on the navbar */}
@@ -37,13 +59,15 @@ function NavBar() {
           <li>Total Items: {totalItems}</li>
         </ul>
       </nav>
-      {/* login button's onClick handler triggers the navigation */}
+      {/* login button's onClick handler triggers the navigation 
+       direct function reference to onClick event handler */}
       <button className="nav-login-buttons" onClick={handleLoginRedirectClick}>
         {isLoggedIn ? "🚪 Logout" : "🖊️ User Login"}
       </button>
-      {/* displays checkoutAmount formated to two decimal places */}
-      <button className="nav-login-buttons">
-        🛍️ Checkout: ${checkoutAmount.toFixed(2)}{" "}
+      {/* displays checkoutAmount formated to two decimal places 
+      direct function reference to onClick event handler*/}
+      <button className="nav-login-buttons" onClick={handleCheckoutClick}>
+        🛍️ Checkout: ${(checkoutAmount * 1.06).toFixed(2)}{" "}
       </button>
     </div>
   );
